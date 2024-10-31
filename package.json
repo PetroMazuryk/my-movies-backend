@@ -10,11 +10,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "nodemon": "^3.1.7"
   },
   "dependencies": {
     "express": "^4.21.1"
-  }
+  },
+  "description": ""
 }
