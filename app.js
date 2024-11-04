@@ -3,6 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import "dotenv/config";
 
+import authRouter from "./routes/auth.js";
 import moviesRouter from "./routes/movies.js";
 
 const app = express();
@@ -11,6 +12,7 @@ app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
+app.use("/api/users", authRouter);
 app.use("/api/movies", moviesRouter);
 
 app.use((_, res) => {
