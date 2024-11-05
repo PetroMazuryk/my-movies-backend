@@ -2,6 +2,7 @@ import express from "express";
 import validateBody from "../middlewares/validateBody.js";
 import { schemas } from "../models/users.js";
 import authControllers from "../controllers/auth.js";
+import { authenticate } from "../middlewares/authenticate.js";
 
 const authRouter = express.Router();
 
@@ -26,5 +27,7 @@ authRouter.post(
   validateBody(schemas.userLoginSchema),
   authControllers.login
 );
+
+authRouter.get("/current", authenticate, authControllers.getCurrent);
 
 export default authRouter;

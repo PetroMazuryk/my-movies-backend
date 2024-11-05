@@ -121,9 +121,22 @@ const login = async (req, res) => {
   });
 };
 
+const getCurrent = async (req, res) => {
+  const { token, email, name } = req.user;
+
+  res.json({
+    token,
+    user: {
+      email,
+      name,
+    },
+  });
+};
+
 export default {
   register: ctrlWrapper(register),
   verify: ctrlWrapper(verify),
   resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
   login: ctrlWrapper(login),
+  getCurrent: ctrlWrapper(getCurrent),
 };
