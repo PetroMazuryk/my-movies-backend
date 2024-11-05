@@ -14,4 +14,10 @@ authRouter.post(
 
 authRouter.get("/verify/:verificationCode", authControllers.verify);
 
+authRouter.post(
+  "/verify",
+  validateBody(schemas.userEmailSchema),
+  authControllers.resendVerifyEmail
+);
+
 export default authRouter;
