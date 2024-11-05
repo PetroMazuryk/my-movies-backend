@@ -20,4 +20,11 @@ authRouter.post(
   authControllers.resendVerifyEmail
 );
 
+// signin
+authRouter.post(
+  "/login",
+  validateBody(schemas.userLoginSchema),
+  authControllers.login
+);
+
 export default authRouter;

@@ -91,8 +91,39 @@ const resendVerifyEmail = async (req, res) => {
   });
 };
 
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user || !user.verify) {
+    throw HttpError(401);
+  }
+
+  const passwordCompare = await bcrypt.compare(password, user.password);
+  if (!passwordCompare) {
+    throw HttpError(401);
+  }
+
+  const { _id: id } = user;
+
+  const payload = {
+    id,
+  };
+
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+  await User.findByIdAndUpdate(id, { token });
+
+  res.json({
+    token,
+    user: {
+      name: user.name,
+      email: user.email,
+    },
+  });
+};
+
 export default {
   register: ctrlWrapper(register),
   verify: ctrlWrapper(verify),
   resendVerifyEmail: ctrlWrapper(resendVerifyEmail),
+  login: ctrlWrapper(login),
 };
