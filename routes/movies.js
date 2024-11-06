@@ -20,4 +20,11 @@ moviesRouter.post(
   moviesControllers.addMovie
 );
 
+moviesRouter.put(
+  "/:id",
+  isValidId,
+  validateBody(schemas.movieAddSchema),
+  moviesControllers.updateMovieById
+);
+
 export default moviesRouter;
