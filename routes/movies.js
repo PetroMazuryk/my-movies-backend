@@ -34,4 +34,6 @@ moviesRouter.patch(
   moviesControllers.updateMovieFavorite
 );
 
+moviesRouter.delete("/:id", isValidId, moviesControllers.deleteMovieById);
+
 export default moviesRouter;
