@@ -18,6 +18,18 @@ const getAllMovies = async (req, res) => {
   res.json(result);
 };
 
+const getMovieById = async (req, res) => {
+  const { id } = req.params;
+  // const result = await Movie.findOne({_id: id});
+  const result = await Movie.findById(id);
+
+  if (!result) {
+    throw HttpError(404, `Movie with id=${id} not found`);
+  }
+
+  res.json(result);
+};
+
 const addMovie = async (req, res) => {
   if (!req.file) {
     throw HttpError(400, "File is required");
@@ -36,4 +48,5 @@ const addMovie = async (req, res) => {
 export default {
   addMovie: ctrlWrapper(addMovie),
   getAllMovies: ctrlWrapper(getAllMovies),
+  getMovieById: ctrlWrapper(getMovieById),
 };
