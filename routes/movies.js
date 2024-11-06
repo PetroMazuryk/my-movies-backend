@@ -6,12 +6,12 @@ import { schemas } from "../models/movie.js";
 import { authenticate } from "../middlewares/authenticate.js";
 
 const moviesRouter = express.Router();
+moviesRouter.use(authenticate);
 
 moviesRouter.get("/", moviesControllers.getAllMovies);
 
 moviesRouter.post(
   "/",
-  authenticate,
   upload.single("poster"),
   validateBody(schemas.movieAddSchema),
   moviesControllers.addMovie

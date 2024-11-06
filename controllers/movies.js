@@ -7,7 +7,14 @@ import HttpError from "../helpers/HttpError.js";
 const moviesPath = path.resolve("public", "movies");
 
 const getAllMovies = async (req, res) => {
-  const result = await Movie.find();
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 10 } = req.query;
+  const skip = (page - 1) * limit;
+  const result = await Movie.find({ owner }, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  }).populate("owner", "email name");
+
   res.json(result);
 };
 
