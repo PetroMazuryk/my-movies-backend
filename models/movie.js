@@ -58,8 +58,13 @@ const movieAddSchema = Joi.object({
   releaseDate: Joi.string().pattern(releaseDateRegexp).required(),
 });
 
+const updateFavoriteMovieSchema = Joi.object({
+  favorite: Joi.boolean().required(),
+});
+
 const schemas = {
   movieAddSchema,
+  updateFavoriteMovieSchema,
 };
 
 const Movie = model("movie", movieSchema);

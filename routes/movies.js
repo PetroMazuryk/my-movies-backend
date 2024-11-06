@@ -27,4 +27,11 @@ moviesRouter.put(
   moviesControllers.updateMovieById
 );
 
+moviesRouter.patch(
+  "/:id/favorite",
+  isValidId,
+  validateBody(schemas.updateFavoriteMovieSchema),
+  moviesControllers.updateMovieFavorite
+);
+
 export default moviesRouter;
