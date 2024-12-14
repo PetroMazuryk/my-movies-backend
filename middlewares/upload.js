@@ -20,7 +20,7 @@ const limits = {
 
 const fileFilter = (req, file, cb) => {
   const { mimetype } = file;
-  console.log(mimetype);
+
   if (mimetype !== "image/jpeg" && mimetype !== "image/png") {
     cb(HttpError(400, "File can have only .jpg or .png extension"), false);
   }

@@ -10,6 +10,7 @@ const moviesPath = path.resolve("public", "movies");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const moviesFolder = path.join(__dirname, "../public");
+const publicDir = path.join(__dirname, "../public/movies");
 
 const getAllMovies = async (req, res) => {
   const { _id: owner } = req.user;
@@ -52,7 +53,32 @@ const addMovie = async (req, res) => {
 
 const updateMovieById = async (req, res) => {
   const { id } = req.params;
-  const result = await Movie.findByIdAndUpdate(id, req.body, { new: true });
+
+  const updateData = {
+    ...req.body,
+    favorite: req.body.favorite === "true",
+  };
+
+  if (req.file) {
+    const tempPath = req.file.path;
+    const fileName = `${id}_${req.file.originalname}`;
+    const newPath = path.join(publicDir, fileName);
+
+    try {
+      await fs.rename(tempPath, newPath);
+
+      updateData.poster = `/movies/${fileName}`;
+    } catch (error) {
+      await fs.unlink(tempPath);
+      throw HttpError(500, "Failed to save the image");
+    }
+  }
+
+  const result = await Movie.findByIdAndUpdate(id, updateData, {
+    new: true,
+    runValidators: true,
+  });
+
   if (!result) {
     throw HttpError(404, `Movie with id=${id} not found`);
   }
@@ -69,19 +95,6 @@ const updateMovieFavorite = async (req, res) => {
 
   res.json(result);
 };
-
-// const deleteMovieById = async (req, res) => {
-//   const { id } = req.params;
-//   const result = await Movie.findByIdAndDelete(id);
-//   if (!result) {
-//     throw HttpError(404, `Movie with id=${id} not found`);
-//   }
-
-//   res.json({
-//     message: "Delete success",
-//     result,
-//   });
-// };
 
 const deleteMovieById = async (req, res) => {
   const { id } = req.params;

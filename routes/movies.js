@@ -23,7 +23,8 @@ moviesRouter.post(
 moviesRouter.put(
   "/:id",
   isValidId,
-  validateBody(schemas.movieAddSchema),
+  upload.single("poster"),
+  validateBody(schemas.movieUpdateSchema),
   moviesControllers.updateMovieById
 );
 
