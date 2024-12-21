@@ -11,6 +11,13 @@ const app = express();
 app.use(morgan("tiny"));
 app.use(cors());
 
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Дозволяє доступ з усіх доменів
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS"); // Методи доступу
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type"); // Заголовки, які будуть дозволені
+  next();
+});
+
 app.use(express.json());
 app.use(express.static("public"));
 
