@@ -11,6 +11,7 @@ const { SECRET_KEY, PROJECT_URL } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
+  
   const user = await User.findOne({ email });
   if (user) {
     throw HttpError(409, "Email already exist");
@@ -42,12 +43,15 @@ const register = async (req, res) => {
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+    await User.findByIdAndUpdate(id, {token});
 
   res.status(201).json({
+    message: "Registration successful. Please verify your email.",
     token,
     user: {
       name: newUser.name,
       email: newUser.email,
+      verify: newUser.verify,
     },
   });
 };
@@ -62,9 +66,17 @@ const verify = async (req, res) => {
     verify: true,
     verificationCode: "",
   });
+  const payload = { id: user._id };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
 
   res.json({
     message: "Verify success",
+    token,
+    user: {
+      name: user.name,
+      email: user.email,
+      verify: true,
+    },
   });
 };
 
@@ -117,18 +129,20 @@ const login = async (req, res) => {
     user: {
       name: user.name,
       email: user.email,
+      verify: user.verify,
     },
   });
 };
 
 const getCurrent = async (req, res) => {
-  const { token, email, name } = req.user;
+  const { token, email, name,verify} = req.user;
 
   res.json({
     token,
     user: {
       email,
       name,
+      verify
     },
   });
 };
